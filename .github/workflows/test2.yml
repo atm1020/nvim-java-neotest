@@ -1,0 +1,39 @@
+name: TestPoc
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nvim-versions: ["stable", "nightly"]
+
+    env:
+      PLUGIN_PATH: ~/.local/share/nvim/lazy
+      ACTIONS_STEP_DEBUG: true
+      ACTIONS_RUNNER_DEBUG: true
+
+    name: test
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: ${{ matrix.nvim-versions }}
+
+      - name: Prepare dependencies
+        run: |
+          mkdir -p ${PLUGIN_PATH}
+          git clone --depth 1 https://github.com/nvim-lua/plenary.nvim $PLUGIN_PATH/plenary.nvim
+          git clone --depth 1 https://github.com/nvim-neotest/nvim-nio $PLUGIN_PATH/nvim-nio
+          git clone --depth 1 https://github.com/nvim-neotest/neotest $PLUGIN_PATH/neotest
+
+      - name: run tests
+        run: |
+          set -e
+          ./test
+        shell: bash

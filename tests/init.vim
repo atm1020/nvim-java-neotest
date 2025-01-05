@@ -1,2 +1,2 @@
-runtime! plugin/plenary.vim
+" runtime! plugin/plenary.vim
 source tests/minimal_init.lua

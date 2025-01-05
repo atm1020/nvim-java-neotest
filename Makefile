@@ -8,11 +8,10 @@ TEST_CONFIG=${TESTS_DIR}/minimal_init.lua
 checks: format lint test
 
 lint: 
-	luacheck ${SRC_DIR} 
+	luacheck ${SRC_DIR}  ${TESTS_DIR} --config .luacheckrc
 
 format:
-	~/.cargo/bin/stylua ${SRC_DIR} ${TESTS_DIR} --config-path=.stylua.toml
+	~/.cargo/bin/stylua ${TESTS_DIR} --config-path=.stylua.toml
 test:
-	@nvim -v
-	# @nvim --headless --noplugin -u ${TEST_CONFIG} \
-	# 	-c "PlenaryBustedDirectory ${TESTS_DIR} {minimal_init = '${TEST_CONFIG}'}"
+	@nvim --headless --noplugin -u ${TEST_CONFIG} \
+		-c "PlenaryBustedDirectory ${TESTS_DIR} {minimal_init = '${TEST_CONFIG}'}"
